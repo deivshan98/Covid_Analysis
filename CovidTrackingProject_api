@@ -19,11 +19,11 @@ date = start_date
 while date <= end_date:
     date_str = date.strftime("%Y%m%d")
     hist_data = requests.get("https://covidtracking.com/api/v1/us/" + date_str + ".json")
-    if not hist_data.ok or type(hist_data) is not bytes:
+    if not hist_data.ok or type(hist_data.content) is not bytes:
+        date += timedelta(days=1)
         continue
     hist_data = json.loads(hist_data.content.decode("utf-8"))
 
     print(date_str)
     date += timedelta(days=1)
-    for data in hist_data:
-        print({data['death']})
+    print({hist_data["death"]})
