@@ -3,22 +3,30 @@ import requests
 from datetime import datetime
 from datetime import timedelta
 
-curr_data = requests.get("https://covidtracking.com/api/v1/states/current.json")
-print(curr_data.status_code)
-covid_curr_state= curr_data.json()
-for data in covid_curr_state:
-    print(f"{data['state']} - Deaths: {data['death']} - Total Test Results: {data['totalTestResults']}")
+##curr_data = requests.get("https://covidtracking.com/api/v1/states/current.json")
+##print(curr_data.status_code)
+##covid_curr_state= curr_data.json()
+##for data in covid_curr_state:
+##print(f"{data['state']} - Deaths: {data['death']} - Total Test Results: {data['totalTestResults']}")
 
 start_date = input("Enter Start Date (YYYYDDMM)")
 end_date = input("Enter End Date (YYYYDDMM)")
 
 start_date = datetime.strptime(start_date, "%Y%m%d").date()
 end_date = datetime.strptime(end_date, "%Y%m%d").date()
-print("as date objects:", start_date, end_date)
 
 date = start_date
 while date <= end_date:
     date_str = date.strftime("%Y%m%d")
-    hist_data = requests.get("https://covidtracking.com/api/v1/us/" + date_str + ".json")
+    hist_data = requests.get("https://covidtracking.com/api/v1/us/" + date_str + ".json()")
     print(date_str)
     date += timedelta(days=1)
+##this is where I run into an error    
+    for data in hist_data:
+        print({data['death']})
+## 
+Traceback (most recent call last):
+  File "C:/Users/deivs/PycharmProjects/COVID_API/API_REQUESTS.py", line 25, in <module>
+    print({data['death']})
+TypeError: byte indices must be integers or slices, not str
+##
