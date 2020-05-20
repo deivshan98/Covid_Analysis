@@ -40,8 +40,9 @@ i = 0
 date = start_date
 while date <= end_date:
     while i < length:
-        date_str = date.strftime("%Y%d%m")
-        hist_state_data = requests.get("https://covidtracking.com/api/v1/states/" + states[i] + "/" + date_str + ".json")
+        date_str = date.strftime("%Y%m%d")
+        hist_state_data = requests.get("https://covidtracking.com/api/v1/states/" + states[i] + "/" + date_str + ".json") 
+        print(hist_state_data.status_code) ##status yields 404 so JsonDecodeError is originating from line before
         if hist_state_data.ok or type(hist_state_data.content) is not bytes:
               i+=1
               continue
