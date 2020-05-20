@@ -9,6 +9,7 @@ print(curr_data.status_code)
 covid_curr_state= curr_data.json()
 for data in covid_curr_state:
     print(f"{data['state']} - Deaths: {data['death']} - Total Test Results: {data['totalTestResults']}")
+    
 ## historical US data is pulled here
 start_date = input("Enter Start Date (YYYYDDMM)")
 end_date = input("Enter End Date (YYYYDDMM)")
@@ -29,25 +30,23 @@ while date <= end_date:
     print({hist_data["death"]})
 
 ##historical state data
-start_date = input("Enter Start Date (YYYYDDMM)")
-end_date = input("Enter End Date (YYYYDDMM)")
-
+start_date = input("Enter Start Date (YYYYMMDD)") ##user input
+end_date = input("Enter End Date (YYYYMMDD)")
 start_date = datetime.strptime(start_date, "%Y%m%d").date()
-end_date = datetime.strptime(end_date, "%Y%m%d").date()
+end_date = datetime.strptime(end_date, "%Y%m%d").date() ##these two lines use datetime to fill in dates between start and end date
 states = ['AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'FL', 'GA', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MD', 'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ', 'NM', 'NY', 'NC', 'ND', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY']
 length = len(states)
 i = 0
 date = start_date
 while date <= end_date:
+    date_str = date.strftime("%Y%m%d")
     while i < length:
-        date_str = date.strftime("%Y%m%d")
-        hist_state_data = requests.get("https://covidtracking.com/api/v1/states/" + states[i] + "/" + date_str + ".json") 
-        print(hist_state_data.status_code) ##status yields 404 so JsonDecodeError is originating from line before
-        if hist_state_data.ok or type(hist_state_data.content) is not bytes:
-              i+=1
-              continue
-        hist_state_data = json.loads(hist_state_data.content.decode("utf-8")) ## this line yields JsonDecodeError
-        print(date_str)
-        i+=1
-        print({hist_state_data["deaths"]})
+        hist_state_data = requests.get("https://covidtracking.com/api/v1/states/" + states[i] + "/" + date_str + ".json")
+        ##print(hist_state_data.status_code)
+        hist_state_data = json.loads(hist_state_data.content.decode("utf-8"))
+        ##print(date_str)
+        i += 1
+        ##print(hist_state_data)
     date += timedelta(days=1)
+with open('covid_hist_data.json', 'w') as f:
+    json.dump(hist_state_data, f)
